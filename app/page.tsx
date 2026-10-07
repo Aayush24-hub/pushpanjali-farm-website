@@ -1,47 +1,41 @@
-export default function Page() {
+import { cookies } from 'next/headers'
+import { getAllContent, getPublishedGallery } from '@/lib/content'
+import { FALLBACK_IMAGES } from '@/lib/content-types'
+import { LanguageProvider } from '@/components/site/language-provider'
+import { SiteHeader } from '@/components/site/site-header'
+import { Hero } from '@/components/site/hero'
+import { StorySection } from '@/components/site/story-section'
+import { GallerySection } from '@/components/site/gallery-section'
+import { ContactSection } from '@/components/site/contact-section'
+import { SiteFooter } from '@/components/site/site-footer'
+
+export default async function HomePage() {
+  const [{ site, farm, contact }, gallery, cookieStore] = await Promise.all([
+    getAllContent(),
+    getPublishedGallery(),
+    cookies(),
+  ])
+  const lang = cookieStore.get('lang')?.value === 'en' ? 'en' : 'ne'
+
   return (
-    <main
-      style={{
-        colorScheme: 'light dark',
-        position: 'relative',
-        display: 'flex',
-        minHeight: '100vh',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'light-dark(#fff, #000)',
-        color: 'light-dark(#000, #fff)',
-      }}
-    >
-      <svg
-        aria-hidden="true"
-        style={{ width: 80, height: 80 }}
-        width={80}
-        height={80}
-        fill="none"
-        viewBox="0 0 20 20"
-        xmlns="http://www.w3.org/2000/svg"
-        stroke="currentColor"
-        strokeWidth="0.5"
-      >
-        <path
-          d="M14.2 14.2H17V6.9375C17 4.76288 15.2371 3 13.0625 3H5.8V5.8M14.2 14.2V7.79063L7.79062 14.2H14.2ZM14.2 14.2V17H6.9375C4.76288 17 3 15.2371 3 13.0625V5.8H5.8M5.8 5.8V12.2313L12.2313 5.8H5.8Z"
-          strokeLinejoin="round"
+    <LanguageProvider initial={lang}>
+      <SiteHeader farmName={site.farmName} />
+      <main>
+        <Hero site={site} />
+        <StorySection id="about" titleKey="aboutTitle" body={farm.about} image={farm.aboutImage || FALLBACK_IMAGES.about} />
+        <StorySection
+          id="poultry"
+          titleKey="poultryTitle"
+          body={farm.poultry}
+          image={farm.poultryImage || FALLBACK_IMAGES.poultry}
+          reverse
+          tone="cream"
         />
-      </svg>
-      <p
-        style={{
-          position: 'absolute',
-          left: '50%',
-          top: 'calc(50% + 56px)',
-          transform: 'translateX(-50%)',
-          whiteSpace: 'nowrap',
-          fontSize: '14px',
-          fontWeight: 500,
-          color: 'light-dark(#71717a, #a1a1aa)',
-        }}
-      >
-        Your v0 generation will show here.
-      </p>
-    </main>
+        <StorySection id="fish" titleKey="fishTitle" body={farm.fish} image={farm.fishImage || FALLBACK_IMAGES.fish} />
+        <GallerySection items={gallery} />
+        <ContactSection contact={contact} />
+      </main>
+      <SiteFooter farmName={site.farmName} contact={contact} />
+    </LanguageProvider>
   )
 }

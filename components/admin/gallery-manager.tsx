@@ -23,7 +23,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { BilingualField } from './fields'
+import { BilingualField, TextField } from './fields'
 
 const CATEGORY_LABEL: Record<GalleryCategory, string> = {
   poultry: 'Poultry',
@@ -146,7 +146,7 @@ export function GalleryManager({ items }: { items: GalleryItem[] }) {
           {items.map((item, i) => (
             <li key={item.id} className="overflow-hidden rounded-[var(--radius-card)] bg-offwhite shadow-soft">
               <div className="relative aspect-[4/3] bg-sage-light">
-                <Image src={item.url} alt={item.caption.en || item.caption.ne || ''} fill sizes="400px" className="object-cover" />
+                <Image src={item.url} alt={item.title || item.caption.en || item.caption.ne || ''} fill sizes="400px" className="object-cover" />
                 <span className="absolute top-2 left-2 rounded-full bg-offwhite/95 px-2.5 py-0.5 text-xs font-medium text-olive">
                   {CATEGORY_LABEL[item.category]}
                 </span>
@@ -158,7 +158,9 @@ export function GalleryManager({ items }: { items: GalleryItem[] }) {
               </div>
               <div className="flex items-center gap-1 p-3">
                 <p className="min-w-0 flex-1 truncate text-sm text-ink/80">
-                  {item.caption.ne || item.caption.en || <span className="text-ink/40">No caption</span>}
+                  {item.title || item.caption.ne || item.caption.en || (
+                    <span className="text-ink/40">No title or caption</span>
+                  )}
                 </p>
                 <Button size="icon" variant="ghost" disabled={i === 0 || pending} onClick={() => move(i, -1)}>
                   <ArrowUp className="size-4" aria-hidden />
@@ -224,6 +226,7 @@ export function GalleryManager({ items }: { items: GalleryItem[] }) {
 
 function EditDialog({ item, onClose }: { item: GalleryItem; onClose: () => void }) {
   const router = useRouter()
+  const [title, setTitle] = useState(item.title)
   const [caption, setCaption] = useState(item.caption)
   const [category, setCategory] = useState(item.category)
   const [published, setPublished] = useState(item.published)
@@ -236,6 +239,7 @@ function EditDialog({ item, onClose }: { item: GalleryItem; onClose: () => void 
           <DialogTitle>Edit photo</DialogTitle>
         </DialogHeader>
         <div className="flex flex-col gap-5">
+          <TextField label="Title (internal name, also used as image alt text)" value={title} onChange={setTitle} />
           <BilingualField label="Caption" value={caption} onChange={setCaption} />
           <div className="flex flex-wrap items-end gap-6">
             <div className="flex flex-col gap-1.5">
@@ -256,7 +260,7 @@ function EditDialog({ item, onClose }: { item: GalleryItem; onClose: () => void 
             disabled={pending}
             onClick={() =>
               start(async () => {
-                const res = await updateGalleryItem({ id: item.id, caption, category, published })
+                const res = await updateGalleryItem({ id: item.id, title, caption, category, published })
                 if (res.ok) {
                   toast.success('Saved')
                   router.refresh()

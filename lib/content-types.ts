@@ -3,8 +3,12 @@ export type Localized = { ne: string; en: string }
 
 export type SiteSettings = {
   farmName: Localized
+  /** Browser-tab / search-result title. Falls back to the farm name when empty. */
+  siteTitle: Localized
   heroDescription: Localized
   heroImage: string | null
+  /** Replaceable logo. `null` means use the bundled default (`DEFAULT_LOGO`). */
+  logo: string | null
 }
 
 export type FarmInfo = {
@@ -33,6 +37,7 @@ export type GalleryCategory = (typeof GALLERY_CATEGORIES)[number]
 export type GalleryItem = {
   id: number
   url: string
+  title: string
   width: number | null
   height: number | null
   category: GalleryCategory
@@ -43,10 +48,19 @@ export type GalleryItem = {
 
 const emptyL: Localized = { ne: '', en: '' }
 
+export const OFFICIAL_NAME: Localized = {
+  ne: 'पुष्पाञ्जली कृषि तथा पशुविकास फार्म',
+  en: 'Pushpanjali Agriculture and Livestock Development Farm',
+}
+
+export const DEFAULT_LOGO = '/logo.jpeg'
+
 export const DEFAULT_SITE: SiteSettings = {
-  farmName: { ne: 'पुष्पाञ्जली फार्म', en: 'Pushpanjali Farm' },
+  farmName: OFFICIAL_NAME,
+  siteTitle: OFFICIAL_NAME,
   heroDescription: emptyL,
   heroImage: null,
+  logo: null,
 }
 
 export const DEFAULT_FARM: FarmInfo = {
@@ -70,10 +84,10 @@ export const DEFAULT_CONTACT: ContactInfo = {
 }
 
 export const FALLBACK_IMAGES = {
-  hero: '/images/hero.png',
-  about: '/images/about.png',
-  poultry: '/images/poultry.png',
-  fish: '/images/fish.png',
+  hero: '/images/hero.jpg',
+  about: '/images/about.jpg',
+  poultry: '/images/poultry.jpg',
+  fish: '/images/fish.jpg',
 }
 
 export function pick(l: Localized | undefined, lang: Lang) {

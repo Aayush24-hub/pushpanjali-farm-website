@@ -104,11 +104,14 @@ export function ImageField({
   value,
   fallback,
   onChange,
+  fit = 'cover',
 }: {
   label: string
   value: string | null
   fallback: string
   onChange: (url: string | null) => void
+  /** Use `contain` for logos so the preview is never cropped or distorted. */
+  fit?: 'cover' | 'contain'
 }) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [busy, setBusy] = useState(false)
@@ -134,7 +137,13 @@ export function ImageField({
       <span className="text-sm font-medium">{label}</span>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <div className="relative aspect-[4/3] w-full overflow-hidden rounded-md bg-sage-light sm:w-48">
-          <Image src={value || fallback} alt="" fill sizes="192px" className="object-cover" />
+          <Image
+            src={value || fallback}
+            alt=""
+            fill
+            sizes="192px"
+            className={fit === 'contain' ? 'object-contain p-2' : 'object-cover'}
+          />
           {!value && (
             <span className="absolute bottom-1 left-1 rounded bg-ink/70 px-1.5 py-0.5 text-[11px] text-cream">
               Default

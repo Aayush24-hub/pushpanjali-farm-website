@@ -29,6 +29,7 @@ function toItem(r: Row): GalleryItem {
   return {
     id: r.id,
     url: r.pathname,
+    title: r.title,
     width: r.width,
     height: r.height,
     category: r.category as GalleryCategory,

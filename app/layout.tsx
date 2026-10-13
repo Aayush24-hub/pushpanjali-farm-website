@@ -2,6 +2,8 @@ import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Inter, Noto_Sans_Devanagari, Noto_Serif_Devanagari, Playfair_Display } from 'next/font/google'
 import { cookies } from 'next/headers'
+import { getAllContent } from '@/lib/content'
+import { DEFAULT_LOGO, DEFAULT_SITE } from '@/lib/content-types'
 import './globals.css'
 
 const notoSans = Noto_Sans_Devanagari({
@@ -24,17 +26,23 @@ const playfair = Playfair_Display({
   display: 'swap',
 })
 
-export const metadata: Metadata = {
-  title: 'पुष्पाञ्जली फार्म | Pushpanjali Farm — Kailali, Nepal',
-  description:
-    'Pushpanjali Farm — poultry and fish farming in Kailali, Nepal. पुष्पाञ्जली फार्म, कैलाली — कुखुरा पालन र माछा पालन।',
-  generator: 'v0.app',
-  icons: { icon: '/logo.jpeg', apple: '/logo.jpeg' },
-  openGraph: {
-    title: 'Pushpanjali Farm | पुष्पाञ्जली फार्म',
-    description: 'Poultry and fish farming in Kailali, Nepal.',
-    images: ['/images/hero.png'],
-  },
+export async function generateMetadata(): Promise<Metadata> {
+  // Falls back to the official defaults if the database is unreachable.
+  const { site } = await getAllContent().catch(() => ({ site: DEFAULT_SITE }))
+  const ne = site.siteTitle.ne || site.farmName.ne
+  const en = site.siteTitle.en || site.farmName.en
+  const icon = site.logo || DEFAULT_LOGO
+
+  return {
+    title: `${ne} | ${en}`,
+    description: `${en} — poultry and fish farming in Kailali, Nepal. ${ne}, कैलाली — कुखुरा पालन र माछा पालन।`,
+    icons: { icon, apple: icon },
+    openGraph: {
+      title: `${en} | ${ne}`,
+      description: 'Poultry and fish farming in Kailali, Nepal.',
+      images: [site.heroImage || '/images/hero.jpg'],
+    },
+  }
 }
 
 export const viewport: Viewport = {

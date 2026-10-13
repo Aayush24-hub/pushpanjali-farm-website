@@ -6,7 +6,15 @@ import { pick, type ContactInfo, type Localized } from '@/lib/content-types'
 import { useLang } from './language-provider'
 import { SocialLinks } from './social-links'
 
-export function SiteFooter({ farmName, contact }: { farmName: Localized; contact: ContactInfo }) {
+export function SiteFooter({
+  farmName,
+  logo,
+  contact,
+}: {
+  farmName: Localized
+  logo: string
+  contact: ContactInfo
+}) {
   const { lang } = useLang()
   const year = new Date().getFullYear()
 
@@ -16,7 +24,7 @@ export function SiteFooter({ farmName, contact }: { farmName: Localized; contact
       <div className="relative mx-auto flex max-w-6xl flex-col gap-10 px-4 py-14 md:flex-row md:justify-between md:px-6">
         <div className="flex items-center gap-4">
           <span className="relative size-16 shrink-0 overflow-hidden rounded-full bg-offwhite">
-            <Image src="/logo.jpeg" alt="" fill sizes="64px" className="object-contain" />
+            <Image src={logo} alt="" fill sizes="64px" className="object-contain" />
           </span>
           <div>
             <p className="font-serif text-xl font-semibold">{pick(farmName, lang)}</p>

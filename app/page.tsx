@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers'
 import { getAllContent, getPublishedGallery } from '@/lib/content'
-import { FALLBACK_IMAGES } from '@/lib/content-types'
+import { DEFAULT_LOGO, FALLBACK_IMAGES } from '@/lib/content-types'
 import { LanguageProvider } from '@/components/site/language-provider'
 import { SiteHeader } from '@/components/site/site-header'
 import { Hero } from '@/components/site/hero'
@@ -19,7 +19,7 @@ export default async function HomePage() {
 
   return (
     <LanguageProvider initial={lang}>
-      <SiteHeader farmName={site.farmName} />
+      <SiteHeader farmName={site.farmName} logo={site.logo || DEFAULT_LOGO} />
       <main>
         <Hero site={site} />
         <StorySection id="about" titleKey="aboutTitle" body={farm.about} image={farm.aboutImage || FALLBACK_IMAGES.about} />
@@ -35,7 +35,7 @@ export default async function HomePage() {
         <GallerySection items={gallery} />
         <ContactSection contact={contact} />
       </main>
-      <SiteFooter farmName={site.farmName} contact={contact} />
+      <SiteFooter farmName={site.farmName} logo={site.logo || DEFAULT_LOGO} contact={contact} />
     </LanguageProvider>
   )
 }

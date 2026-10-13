@@ -73,7 +73,7 @@ export function GallerySection({ items }: { items: GalleryItem[] }) {
                   >
                     <Image
                       src={item.url}
-                      alt={caption || t(CATEGORY_LABEL_KEY[item.category], lang)}
+                      alt={caption || item.title || t(CATEGORY_LABEL_KEY[item.category], lang)}
                       width={item.width ?? 800}
                       height={item.height ?? 600}
                       sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
@@ -152,13 +152,14 @@ function Lightbox({
                 <Image
                   key={item.id}
                   src={item.url}
-                  alt={caption || t(CATEGORY_LABEL_KEY[item.category], lang)}
+                  alt={caption || item.title || t(CATEGORY_LABEL_KEY[item.category], lang)}
                   fill
                   sizes="100vw"
                   className="object-contain"
                 />
               </div>
-              <figcaption className="flex items-center gap-3 text-center text-cream">
+              <figcaption className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-center text-cream">
+                {item.title && <span className="font-serif text-lg font-semibold">{item.title}</span>}
                 {caption && <span>{caption}</span>}
                 <span className="text-sm text-cream/60">
                   {index! + 1} / {items.length}

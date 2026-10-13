@@ -14,7 +14,7 @@ const LINKS = [
   { href: '/admin/settings', label: 'Site Settings', icon: Settings },
 ]
 
-export function AdminSidebar({ email }: { email: string }) {
+export function AdminSidebar({ email, logo }: { email: string; logo: string }) {
   const pathname = usePathname()
   const router = useRouter()
 
@@ -28,7 +28,7 @@ export function AdminSidebar({ email }: { email: string }) {
     <aside className="flex shrink-0 flex-col bg-olive text-cream md:sticky md:top-0 md:h-svh md:w-64">
       <div className="flex items-center gap-3 px-5 py-5">
         <span className="relative size-10 overflow-hidden rounded-full bg-offwhite">
-          <Image src="/logo.jpeg" alt="" fill sizes="40px" className="object-contain" />
+          <Image src={logo} alt="" fill sizes="40px" className="object-contain" />
         </span>
         <div className="min-w-0">
           <p className="font-serif font-semibold">Farm Admin</p>

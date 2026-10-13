@@ -3,7 +3,7 @@
 import { useState, useTransition } from 'react'
 import { toast } from 'sonner'
 import { saveContactInfo, saveFarmInfo, saveSiteSettings } from '@/app/actions/admin'
-import { FALLBACK_IMAGES, type ContactInfo, type FarmInfo, type SiteSettings } from '@/lib/content-types'
+import { DEFAULT_LOGO, FALLBACK_IMAGES, type ContactInfo, type FarmInfo, type SiteSettings } from '@/lib/content-types'
 import { BilingualField, ImageField, Panel, SaveBar, TextField } from './fields'
 
 function useSave<T>(action: (v: T) => Promise<{ ok: boolean; error?: string }>) {
@@ -26,7 +26,19 @@ export function SiteSettingsEditor({ initial }: { initial: SiteSettings }) {
     <>
       <div className="flex flex-col gap-6">
         <Panel title="Branding">
+          <ImageField
+            label="Logo (shown in the header, footer, admin and browser tab)"
+            value={v.logo}
+            fallback={DEFAULT_LOGO}
+            fit="contain"
+            onChange={(logo) => setV({ ...v, logo })}
+          />
           <BilingualField label="Farm name" value={v.farmName} onChange={(farmName) => setV({ ...v, farmName })} />
+          <BilingualField
+            label="Site title (browser tab and search results)"
+            value={v.siteTitle}
+            onChange={(siteTitle) => setV({ ...v, siteTitle })}
+          />
         </Panel>
         <Panel title="Hero">
           <BilingualField

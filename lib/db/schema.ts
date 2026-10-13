@@ -53,6 +53,7 @@ export const verification = pgTable('verification', {
 export const galleryItems = pgTable('gallery_items', {
   id: serial('id').primaryKey(),
   pathname: text('pathname').notNull(),
+  title: text('title').notNull().default(''),
   width: integer('width'),
   height: integer('height'),
   category: text('category').notNull().default('farm'),

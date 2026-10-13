@@ -8,7 +8,7 @@ import { NAV, t } from '@/lib/i18n'
 import { pick, type Localized } from '@/lib/content-types'
 import { useLang } from './language-provider'
 
-export function SiteHeader({ farmName }: { farmName: Localized }) {
+export function SiteHeader({ farmName, logo }: { farmName: Localized; logo: string }) {
   const { lang, setLang } = useLang()
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
@@ -56,7 +56,7 @@ export function SiteHeader({ farmName }: { farmName: Localized }) {
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 md:h-20 md:px-6">
         <a href="#home" className="flex min-w-0 items-center gap-3" aria-label={pick(farmName, lang)}>
           <span className="relative size-10 shrink-0 overflow-hidden rounded-full bg-offwhite ring-1 ring-sage/60 md:size-12">
-            <Image src="/logo.jpeg" alt="" fill sizes="48px" className="object-contain" priority />
+            <Image src={logo} alt="" fill sizes="48px" className="object-contain" priority />
           </span>
           <span
             className={cn(

@@ -66,9 +66,12 @@ export async function saveSiteSettings(input: SiteSettings): Promise<Result> {
     if (!farmName.ne && !farmName.en) return { ok: false, error: 'Farm name is required.' }
     await saveContent('site', {
       farmName,
+      siteTitle: loc(input.siteTitle, 160),
       heroDescription: loc(input.heroDescription, 600),
       heroImage: imageOrNull(input.heroImage),
+      logo: imageOrNull(input.logo),
     } satisfies SiteSettings)
+    revalidatePath('/admin', 'layout')
     return { ok: true }
   } catch (e) {
     console.error('saveSiteSettings', e)
@@ -150,6 +153,7 @@ export async function addGalleryItem(input: {
 
 export async function updateGalleryItem(input: {
   id: number
+  title: string
   category: string
   caption: Localized
   published: boolean
@@ -160,6 +164,7 @@ export async function updateGalleryItem(input: {
     await db
       .update(galleryItems)
       .set({
+        title: str(input.title, 120),
         category: category(input.category),
         captionNe: caption.ne,
         captionEn: caption.en,
